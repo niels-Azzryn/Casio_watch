@@ -21,16 +21,13 @@ int main(void){
 		uint8_t minutes = 0;
 		uint8_t seconds = 0;
 		uint8_t milisecond = 0;
-	//time anziege stoppuhr
-		uint8_t stopwatch_hundredths = 0;
-		uint8_t stopwatch_seconds = 0;
-		uint8_t stopwatch_minutes = 0;
 	//dates
 		uint8_t date_day = 1;
+		uint8_t month = 1;
 	//entry
 		uint8_t entry_flag = 0;
 	//morgen oder nachmittag
-		char *  AM_PM[] = {"AM","PM","24"};
+		char *  AM_PM[] = {"AM","PM","24","ST","AL   ","SU"};
 		uint8_t daytime = 0;
 		uint8_t daytime_flag = 0;
 	//weekdays
@@ -47,6 +44,19 @@ int main(void){
 		uint8_t button_c = 0;
 	//clock light
 		uint8_t clock_light = 0;
+	//stopwatch
+		uint8_t stopwatch_hundredths = 0;
+		uint8_t stopwatch_seconds = 0;
+		uint8_t stopwatch_minutes = 0;
+		uint8_t stop_watch_mini_modes = 0;
+	//kalender
+		uint8_t kalender_modes = 0;
+		uint8_t zwischenspeicher_sekunden = 0;
+		uint8_t zwischenspeicher_minuten = 0;
+		uint8_t zwischenspeicher_stunden = 0;
+		uint8_t zwischenspeicher_monate = 1;
+		uint8_t zwischenspeicher_datum = 0;
+		uint8_t zwischenspeicher_wochentag = 0;
 		
     while (1) {
 //Eingabe
@@ -56,10 +66,11 @@ int main(void){
 	buttons_flanke = buttons_neu ^ buttons_alt;
 	buttons_pos_flanke = buttons_flanke & buttons_neu;
 	button_A = (buttons_pos_flanke & 0b10000000)>0;
-	button_L = (buttons_pos_flanke & 0b0010)>0;
-	button_c = (buttons_pos_flanke & 0b0001)>0;
+	button_L = (buttons_pos_flanke & 0b0001)>0;
+	button_c = (buttons_pos_flanke & 0b0010)>0;
 //Verarbeitung
 	//umrechnung
+		//umrechnung zeiten
 		if((getSystemTimeMs()-clock) >=1000){
 			seconds += 1;
 			clock = getSystemTimeMs();
@@ -73,38 +84,60 @@ int main(void){
 			minutes += 1;
 			seconds = 0;
 		}
-		
+		//12h uhr
 		if(hour_12h > 11){
 			hour_12h = 0;
 			daytime_flag = daytime_flag ^ 1;
 		}
+		//24h Uhr
 		if(hour_24h > 23){
 			hour_24h = 0;
 			day_of_the_week = 0;
 			date_day += 1;
 		}
-		if(button_A){
+		//31 tage erreicht es wird wieder auf 1 gesetzt
+		if(date_day > 31){
+			date_day = 1;
+			month += 1;
+		}
+		//Monats overflow
+		if(month>12){
+			month = 1;
+		}
+		//wechsel zwischen 12 und 24h modus
+		if(button_A && (!clock_modes)){
 			twelve_twentyfour = !twelve_twentyfour;
 		}
+		//24 wird angezeigt
 		if(!twelve_twentyfour){
 			daytime = 2;
 		}
+		//AM oder PM je nach daytime flag wert wird eins der beiden angezeigt
 		else{
 			if(!daytime_flag){
 				daytime = 0;
 			}
 		}
+		//taster um das licht einzuschalten
 		if(button_L){
 			clock_light = clock_light ^ 1;
 		}
-		
+		//anzeige der ersten reihe je nach modus
+		if(!clock_modes){
+			lcdWriteText(0,0,"%s %s",AM_PM[daytime],week_days[day_of_the_week]);
+		}
+		else if(clock_modes == 1){
+			lcdWriteText(0,0,AM_PM[4]);
+		}
+		else if(clock_modes==2){
+			lcdWriteText(0,0,AM_PM[3]);
+		}
 	//cases
 	switch (clock_modes){
 		case 0:
-			//time
-			lcdWriteText(0,0,"%s %s",AM_PM[daytime],week_days[day_of_the_week]);
+			//time	
+			lcdWriteText(0,18,"%u",date_day);
 			lcdWriteText(1,2,":%02u:%02u",minutes,seconds);
-			lcdWriteText(0,6,"%s",date_day);
 			if(!twelve_twentyfour){
 				lcdWriteText(1,0,"%02u",hour_24h);
 			}
@@ -115,22 +148,222 @@ int main(void){
 				clock_modes += 1;
 			}
 		break;
+		
 		case 1://daily alarm
 			if(button_c){
 				clock_modes += 1;
 			}
 		break;
+		
 		case 2://Stopwatch
+			switch(stop_watch_mini_modes){
+				case 0: //normal mode no counting
+					lcdWriteText(1,0,"%02u:%02u:%02u",stopwatch_minutes,stopwatch_seconds,stopwatch_hundredths);
+					if(button_A){
+						stop_watch_mini_modes = 1;
+					}
+				break;
+				case 1://counting start button A was pressed
+						lcdWriteText(1,0,"%02u:%02u:%02u",stopwatch_minutes,stopwatch_seconds,stopwatch_hundredths);
+						if((getSystemTimeMs()-clock) >=10){
+							stopwatch_hundredths += 1;
+							clock = getSystemTimeMs();
+						}
+						if(stopwatch_hundredths>99){
+							stopwatch_hundredths = 0;
+							stopwatch_seconds += 1;
+						}
+						if(stopwatch_seconds>59){
+							stopwatch_seconds = 0;
+							stopwatch_minutes += 1;
+						}
+						if(button_A){
+							stop_watch_mini_modes = 2;
+						}
+						if((stopwatch_hundredths == 99) && (stopwatch_seconds == 59) && (stopwatch_minutes == 59)){
+							stop_watch_mini_modes = 3;
+						}
+						if(button_L){
+							stop_watch_mini_modes = 4;
+							clock_light = 1;
+						}
+				break;
+				
+				case 2: //counting stop
+					if(button_A){
+						stop_watch_mini_modes = 1;
+					}
+					if(button_L){
+						stop_watch_mini_modes = 0;
+						stopwatch_seconds = 0;
+						stopwatch_minutes = 0;
+						stopwatch_hundredths = 0;
+						clock_light = 1;
+					}
+				break;
+				
+				case 3: //max amount of timer over
+					if(button_L){
+						stop_watch_mini_modes = 0;
+						stopwatch_seconds = 0;
+						stopwatch_minutes = 0;
+						stopwatch_hundredths = 0;
+						clock_light = 1;
+					}					
+				break;
+				
+				case 4: //stop time but still counting
+						if((getSystemTimeMs()-clock) >=10){
+							stopwatch_hundredths += 1;
+							clock = getSystemTimeMs();
+						}
+						if(stopwatch_hundredths>99){
+							stopwatch_hundredths = 0;
+							stopwatch_seconds += 1;
+						}
+						if(stopwatch_seconds>59){
+							stopwatch_seconds = 0;
+							stopwatch_minutes += 1;
+						}
+						if(button_A){
+							stop_watch_mini_modes = 2;
+						}
+						if((stopwatch_hundredths == 99) && (stopwatch_seconds == 59) && (stopwatch_minutes == 59)){
+							stop_watch_mini_modes = 3;
+						}
+						if(button_L){
+							stop_watch_mini_modes = 1;
+							clock_light = 1;
+						}
+						if(button_A){
+							stop_watch_mini_modes = 5;
+							
+						}
+				break;
+				
+				case 5: //
+					if(button_L){
+						lcdWriteText(1,0,"%02u:%02u:%02u",stopwatch_minutes,stopwatch_seconds,stopwatch_hundredths);
+						clock_light = 1;
+						stop_watch_mini_modes = 6;
+					}
+				break;
+				
+				case 6:
+					if(button_L){
+						clock_light = 1;
+						stop_watch_mini_modes = 0;
+						stopwatch_seconds = 0;
+						stopwatch_minutes = 0;
+						stopwatch_hundredths = 0;
+					}
+				break;
+			}
 			if(button_c){
 				clock_modes += 1;
 			}
-			
-			lcdWriteText(1,0,"%02u:%02u:%02u",stopwatch_minutes,stopwatch_seconds,stopwatch_hundredths);
-			
 		break;
+		
 		case 3://Zeitänderungen
-			if(button_c){
-				clock_modes = 0;
+			daytime = 5;
+			lcdWriteText(0,0,"%s",AM_PM[daytime]);
+			if(!entry_flag){
+				entry_flag = 1;
+				lcdWriteText(0,3,"%s",week_days[day_of_the_week]);
+				zwischenspeicher_sekunden = seconds;
+				zwischenspeicher_minuten = minutes;
+				zwischenspeicher_stunden = hour_24h;
+				zwischenspeicher_datum = date_day;
+				zwischenspeicher_wochentag = day_of_the_week;
+				zwischenspeicher_monate = month;
+			}
+			if(kalender_modes<3){
+				lcdWriteText(1,0,"%02u:%02u:%02u",zwischenspeicher_stunden,zwischenspeicher_minuten,zwischenspeicher_sekunden);
+			}
+			switch(kalender_modes){
+				case 0: //seconds
+					//nächster modus
+					if(button_L){
+						kalender_modes += 1;
+						clock_light = 1;
+					}
+					if(button_A){
+						zwischenspeicher_sekunden += 1;
+					}
+					if(zwischenspeicher_sekunden>59){
+						zwischenspeicher_sekunden = 0;
+					}
+				break;
+				case 1: //hours
+					//nächster modus
+					if(button_L){
+						kalender_modes += 1;
+						clock_light = 1;
+					}
+					if(button_A){
+						zwischenspeicher_stunden += 1;
+					}
+					if(zwischenspeicher_stunden >23){
+						zwischenspeicher_stunden = 0;
+					}
+				break;
+				case 2: //minutes
+					//nächster modus
+					if(button_L){
+						kalender_modes += 1;
+						clock_light = 1;
+					}
+					if(button_A){
+						zwischenspeicher_minuten += 1;
+					}
+					if(zwischenspeicher_minuten > 59){
+						zwischenspeicher_minuten = 0;
+					}
+				break;
+				case 3: //month
+					//nächster modus
+					if(button_L){
+						kalender_modes += 1;
+						clock_light = 1;
+					}
+					if(button_A){
+						zwischenspeicher_monate += 1;
+					}
+					if(zwischenspeicher_monate>12){
+						zwischenspeicher_monate = 1;
+					}
+					lcdWriteText(1,0,"%u       ",zwischenspeicher_monate);
+				break;
+				case 4: //date
+					//nächster modus
+					if(button_L){
+						kalender_modes += 1;
+						clock_light = 1;
+					}
+					if(button_A){
+						zwischenspeicher_datum += 1;
+					}
+					if(zwischenspeicher_datum >31){
+						zwischenspeicher_datum = 1;
+
+					}
+					lcdWriteText(0,18,"%u ",zwischenspeicher_datum);
+				break;
+				case 5://weekday
+					if(button_A){
+						zwischenspeicher_wochentag += 1;
+					}
+					if(zwischenspeicher_wochentag >6){
+						zwischenspeicher_wochentag = 0;
+					}
+					lcdWriteText(0,3,"%s       ",week_days[zwischenspeicher_wochentag]);
+					if(button_c){
+						seconds = zwischenspeicher_sekunden;
+						minutes = zwischenspeicher_minuten;
+						clock_modes = 0;
+						entry_flag = 0;
+					}
+				break;
 			}
 		break;
 	}
