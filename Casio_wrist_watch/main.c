@@ -57,6 +57,33 @@ int main(void){
 		uint8_t zwischenspeicher_monate = 1;
 		uint8_t zwischenspeicher_datum = 0;
 		uint8_t zwischenspeicher_wochentag = 0;
+	//clock symbol anziege wecker
+		uint8_t clock_symbol = 1;
+		uint8_t stripes_symbol = 2;
+		const uint8_t clock_symbol_bitarray[] = {	0b00100,
+																			0b01110,
+																			0b01110,
+																			0b01110,
+																			0b11111,
+																			0b11111,
+																			0b00100,
+																			0b00000};
+		const uint8_t stripes_symbol_bitarray[] = {	0b00000,
+																			0b10101,
+																			0b10101,
+																			0b10101,
+																			0b10101,
+																			0b10101,
+																			0b10101,
+																			0b00000};
+		lcdCreateCustomChar(clock_symbol,clock_symbol_bitarray);
+		lcdCreateCustomChar(stripes_symbol,stripes_symbol_bitarray);
+		uint8_t symbol_mode = 0;
+	//wecker
+		uint8_t wecker_modes = 0;
+		uint8_t wecker_stunden = 0;
+		uint8_t wecker_minuten = 0;
+		uint8_t alarm_flag = 0;
 		
     while (1) {
 //Eingabe
@@ -95,10 +122,24 @@ int main(void){
 			day_of_the_week = 0;
 			date_day += 1;
 		}
-		//31 tage erreicht es wird wieder auf 1 gesetzt
-		if(date_day > 31){
-			date_day = 1;
-			month += 1;
+		//alle tage im monat vorbei
+		if(!month | (month == 2)|(month==4)|(month==6)|(month==7)|(month==9)|(month==11) ){
+			if(date_day > 31){
+				date_day = 1;
+				month += 1;
+			}
+		}
+		else if((month==3)|(month==5)|(month==8)|(month==10)){
+			if(date_day > 30){
+				date_day = 1;
+				month += 1;
+			}
+		}
+		else if((month==1)){
+			if(date_day > 28){
+				date_day = 1;
+				month += 1;
+			}
 		}
 		//Monats overflow
 		if(month>12){
@@ -132,6 +173,18 @@ int main(void){
 		else if(clock_modes==2){
 			lcdWriteText(0,0,AM_PM[3]);
 		}
+	//wecker aktivierung
+		if(!symbol_mode | (symbol_mode==3)){
+			if((wecker_stunden==hour_24h)&&(wecker_minuten==minutes)){
+				rgbWrite(255,0,0);
+				alarm_flag = 1;
+			}
+		}
+		if(alarm_flag && button_L){
+			rgbWrite(1,255,1);
+			clock_light = 1;
+			alarm_flag = 0;
+		}
 	//cases
 	switch (clock_modes){
 		case 0:
@@ -152,6 +205,54 @@ int main(void){
 		case 1://daily alarm
 			if(button_c){
 				clock_modes += 1;
+			}
+			if(button_A && (!wecker_modes)){
+				symbol_mode += 1;
+			}
+			if(symbol_mode >3){
+				symbol_mode = 0;
+			}
+			if(!symbol_mode){
+				lcdWriteText(2,0,"%c %c", stripes_symbol, clock_symbol);
+			}
+			else if(symbol_mode == 1){
+				lcdWriteText(2,0,"   ");
+			}
+			else if(symbol_mode == 2){
+				lcdWriteText(2,0,"%c",stripes_symbol);
+			}
+			else{
+				lcdWriteText(2,0,"%c", clock_symbol);
+			}
+			lcdWriteText(1,0,"%02u:%02u   ",wecker_stunden,wecker_minuten);
+			switch (wecker_modes){
+				case 0: //nichts
+					
+					if(button_L){
+						wecker_modes += 1;
+						clock_light = 1;
+					}
+				break;
+				case 1: //stunden
+					if(button_A){
+						wecker_stunden += 1;
+					}
+					if(wecker_stunden>23){
+						wecker_stunden = 0;
+					}
+					if(button_L){
+						wecker_modes += 1;
+						clock_light = 1;
+					}
+				break;
+				case 2: // minutes
+					if(button_A){
+						wecker_minuten += 1;
+					}
+					if(wecker_minuten>59){
+						wecker_minuten = 0;
+					}	
+				break;
 			}
 		break;
 		
@@ -282,6 +383,9 @@ int main(void){
 			}
 			switch(kalender_modes){
 				case 0: //seconds
+					if(button_c){
+						clock_modes = 0;
+					}
 					//nächster modus
 					if(button_L){
 						kalender_modes += 1;
@@ -358,8 +462,19 @@ int main(void){
 					}
 					lcdWriteText(0,3,"%s       ",week_days[zwischenspeicher_wochentag]);
 					if(button_c){
+						kalender_modes = 0;
 						seconds = zwischenspeicher_sekunden;
 						minutes = zwischenspeicher_minuten;
+						hour_24h = zwischenspeicher_stunden;
+						if(zwischenspeicher_stunden>11){
+							hour_12h = zwischenspeicher_stunden - 12;
+						}
+						else{
+							hour_12h = zwischenspeicher_stunden;
+						}
+						month = zwischenspeicher_monate;
+						date_day = zwischenspeicher_datum;
+						day_of_the_week = zwischenspeicher_wochentag;
 						clock_modes = 0;
 						entry_flag = 0;
 					}
