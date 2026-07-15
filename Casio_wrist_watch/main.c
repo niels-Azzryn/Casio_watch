@@ -84,6 +84,11 @@ int main(void){
 		uint8_t wecker_stunden = 0;
 		uint8_t wecker_minuten = 0;
 		uint8_t alarm_flag = 0;
+		uint64_t timer_schutz = 60500;
+		uint64_t inZeit_ms = 0;
+	//blinken
+		uint8_t blink_timer = 0; 
+		uint8_t blink_flag = 0;
 		
     while (1) {
 //Eingabe
@@ -174,17 +179,43 @@ int main(void){
 			lcdWriteText(0,0,AM_PM[3]);
 		}
 	//wecker aktivierung
-		if(!symbol_mode | (symbol_mode==3)){
-			if((wecker_stunden==hour_24h)&&(wecker_minuten==minutes)){
+		inZeit_ms = getSystemTimeMs();
+		
+		if(!symbol_mode | (symbol_mode==2)){
+			if((wecker_stunden==hour_24h)&&(wecker_minuten==minutes)&&((inZeit_ms-timer_schutz)>=60500)){
 				rgbWrite(255,0,0);
 				alarm_flag = 1;
+				timer_schutz = inZeit_ms;
+			}
+		}
+		if(!symbol_mode | (symbol_mode ==3)){
+			if((minutes == 0) && (seconds == 0)){
+				rgbWrite(255,0,0);
+				alarm_flag = 1;
+				timer_schutz = inZeit_ms;
 			}
 		}
 		if(alarm_flag && button_L){
-			rgbWrite(1,255,1);
-			clock_light = 1;
+			rgbWrite(0,0,0);
+			clock_light = !clock_light;
 			alarm_flag = 0;
 		}
+			if(!symbol_mode){
+				lcdWriteText(2,0,"%c %c", stripes_symbol, clock_symbol);
+			}
+			else if(symbol_mode == 1){
+				lcdWriteText(2,0,"   ");
+			}
+			else if(symbol_mode == 2){
+				lcdWriteText(2,0,"%c",stripes_symbol);
+			}
+			else{
+				lcdWriteText(2,0,"%c", clock_symbol);
+			}
+			
+			if((inZeit_ms-blink_timer)>=100){
+				blink_flag = !blink_flag;
+			}
 	//cases
 	switch (clock_modes){
 		case 0:
@@ -212,19 +243,9 @@ int main(void){
 			if(symbol_mode >3){
 				symbol_mode = 0;
 			}
-			if(!symbol_mode){
-				lcdWriteText(2,0,"%c %c", stripes_symbol, clock_symbol);
-			}
-			else if(symbol_mode == 1){
-				lcdWriteText(2,0,"   ");
-			}
-			else if(symbol_mode == 2){
-				lcdWriteText(2,0,"%c",stripes_symbol);
-			}
-			else{
-				lcdWriteText(2,0,"%c", clock_symbol);
-			}
-			lcdWriteText(1,0,"%02u:%02u   ",wecker_stunden,wecker_minuten);
+			lcdWriteText(1,0,"%02u",wecker_stunden);
+			lcdWriteText(1,3,"%02u ",wecker_minuten);
+			lcdWriteText(1,6,"  ");
 			switch (wecker_modes){
 				case 0: //nichts
 					
@@ -234,6 +255,13 @@ int main(void){
 					}
 				break;
 				case 1: //stunden
+					if(blink_flag){
+						lcdWriteText(1,2,":");
+					}
+					else
+					{
+						lcdWriteText(1,2," ");
+					}
 					if(button_A){
 						wecker_stunden += 1;
 					}
@@ -246,6 +274,14 @@ int main(void){
 					}
 				break;
 				case 2: // minutes
+
+					if(blink_flag){
+						lcdWriteText(1,5,":");
+					}
+					else
+					{
+						lcdWriteText(1,5," ");
+					}
 					if(button_A){
 						wecker_minuten += 1;
 					}
@@ -379,15 +415,29 @@ int main(void){
 				zwischenspeicher_monate = month;
 			}
 			if(kalender_modes<3){
-				lcdWriteText(1,0,"%02u:%02u:%02u",zwischenspeicher_stunden,zwischenspeicher_minuten,zwischenspeicher_sekunden);
+				lcdWriteText(1,0,"%02u",zwischenspeicher_stunden);
+				lcdWriteText(1,3,"%02u",zwischenspeicher_minuten);
+				lcdWriteText(1,6,"%02u",zwischenspeicher_sekunden);
 			}
 			switch(kalender_modes){
 				case 0: //seconds
+							if(blink_flag){
+								lcdWriteText(1,8,":");
+								lcdWriteText(1,8,":");
+								lcdWriteText(1,8,":");
+							}
+							else
+							{
+								lcdWriteText(1,8," ");
+								lcdWriteText(1,8," ");
+								lcdWriteText(1,8," ");
+							}
 					if(button_c){
 						clock_modes = 0;
 					}
 					//nächster modus
 					if(button_L){
+						lcdWriteText(1,8," ");
 						kalender_modes += 1;
 						clock_light = 1;
 					}
@@ -399,9 +449,21 @@ int main(void){
 					}
 				break;
 				case 1: //hours
+							if(blink_flag){
+								lcdWriteText(1,2,":");
+								lcdWriteText(1,2,":");
+								lcdWriteText(1,2,":");
+							}
+							else
+							{
+								lcdWriteText(1,2," ");
+								lcdWriteText(1,2," ");
+								lcdWriteText(1,2," ");
+							}
 					//nächster modus
 					if(button_L){
 						kalender_modes += 1;
+						lcdWriteText(1,2,":");
 						clock_light = 1;
 					}
 					if(button_A){
@@ -412,10 +474,22 @@ int main(void){
 					}
 				break;
 				case 2: //minutes
+							if(blink_flag){
+								lcdWriteText(1,5,":");
+								lcdWriteText(1,5,":");
+								lcdWriteText(1,5,":");
+							}
+							else
+							{
+								lcdWriteText(1,5," ");
+								lcdWriteText(1,5," ");
+								lcdWriteText(1,5," ");
+							}
 					//nächster modus
 					if(button_L){
 						kalender_modes += 1;
 						clock_light = 1;
+						lcdWriteText(1,0,"                    ");
 					}
 					if(button_A){
 						zwischenspeicher_minuten += 1;
@@ -425,9 +499,22 @@ int main(void){
 					}
 				break;
 				case 3: //month
+							if(blink_flag){
+								lcdWriteText(1,2,":");
+								lcdWriteText(1,2,":");
+								lcdWriteText(1,2,":");
+								lcdWriteText(1,2,":");
+							}
+							else{
+								lcdWriteText(1,2," ");
+								lcdWriteText(1,2," ");
+								lcdWriteText(1,2," ");
+								lcdWriteText(1,2," ");
+							}
 					//nächster modus
 					if(button_L){
 						kalender_modes += 1;
+						lcdWriteText(1,2," ");
 						clock_light = 1;
 					}
 					if(button_A){
@@ -436,11 +523,23 @@ int main(void){
 					if(zwischenspeicher_monate>12){
 						zwischenspeicher_monate = 1;
 					}
-					lcdWriteText(1,0,"%u       ",zwischenspeicher_monate);
+					lcdWriteZahl(1,0,zwischenspeicher_monate,2,0);
+					
 				break;
 				case 4: //date
+							if(blink_flag){
+								lcdWriteText(0,17,":");
+								lcdWriteText(0,17,":");
+								lcdWriteText(0,17,":");
+							}
+							else
+							{
+								lcdWriteText(0,17," ");
+								lcdWriteText(0,17," ");
+							}
 					//nächster modus
 					if(button_L){
+						lcdWriteText(0,17," ");
 						kalender_modes += 1;
 						clock_light = 1;
 					}
@@ -454,13 +553,24 @@ int main(void){
 					lcdWriteText(0,18,"%u ",zwischenspeicher_datum);
 				break;
 				case 5://weekday
+							if(blink_flag){
+								lcdWriteText(0,5,":");
+								lcdWriteText(0,5,":");
+								lcdWriteText(0,5,":");
+							}
+							else
+							{
+								lcdWriteText(0,5," ");
+								lcdWriteText(0,5," ");
+								lcdWriteText(0,5,":");
+							}
 					if(button_A){
 						zwischenspeicher_wochentag += 1;
 					}
 					if(zwischenspeicher_wochentag >6){
 						zwischenspeicher_wochentag = 0;
 					}
-					lcdWriteText(0,3,"%s       ",week_days[zwischenspeicher_wochentag]);
+					lcdWriteText(0,3,"%s",week_days[zwischenspeicher_wochentag]);
 					if(button_c){
 						kalender_modes = 0;
 						seconds = zwischenspeicher_sekunden;
