@@ -572,6 +572,7 @@ int main(void){
 					}
 					lcdWriteText(0,3,"%s",week_days[zwischenspeicher_wochentag]);
 					if(button_c){
+						lcdWriteText(0,5," ");
 						kalender_modes = 0;
 						seconds = zwischenspeicher_sekunden;
 						minutes = zwischenspeicher_minuten;

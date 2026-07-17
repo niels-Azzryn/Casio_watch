@@ -451,7 +451,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x246c
+.text           0x00000000     0x2486
  *(.vectors)
  .vectors       0x00000000       0xe4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega2560/avr6/crtatmega2560.o
                 0x00000000                __vector_default
@@ -570,99 +570,99 @@ END GROUP
                 0x00000132                __vector_42
                 0x00000134                . = ALIGN (0x2)
  *(.text.*)
- .text.main     0x00000134     0x13b6 main.o
+ .text.main     0x00000134     0x13d0 main.o
                 0x00000134                main
  .text.ledWriteAll
-                0x000014ea        0x6 ucBoardDriver.o
-                0x000014ea                ledWriteAll
+                0x00001504        0x6 ucBoardDriver.o
+                0x00001504                ledWriteAll
  .text.buttonReadAllPL
-                0x000014f0        0x6 ucBoardDriver.o
-                0x000014f0                buttonReadAllPL
+                0x0000150a        0x6 ucBoardDriver.o
+                0x0000150a                buttonReadAllPL
  .text.startSystemTimeMs
-                0x000014f6       0x14 ucBoardDriver.o
-                0x000014f6                startSystemTimeMs
+                0x00001510       0x14 ucBoardDriver.o
+                0x00001510                startSystemTimeMs
  .text.getSystemTimeMs
-                0x0000150a       0x22 ucBoardDriver.o
-                0x0000150a                getSystemTimeMs
- .text.initAdc  0x0000152c       0x2a ucBoardDriver.o
-                0x0000152c                initAdc
+                0x00001524       0x22 ucBoardDriver.o
+                0x00001524                getSystemTimeMs
+ .text.initAdc  0x00001546       0x2a ucBoardDriver.o
+                0x00001546                initAdc
  .text.rgbWrite
-                0x00001556       0x2e ucBoardDriver.o
-                0x00001556                rgbWrite
- .text.initRgb  0x00001584       0x28 ucBoardDriver.o
-                0x00001584                initRgb
- .text.lcdSid   0x000015ac       0x14 ucBoardDriver.o
-                0x000015ac                lcdSid
- .text.lcdSclk  0x000015c0       0x14 ucBoardDriver.o
-                0x000015c0                lcdSclk
+                0x00001570       0x2e ucBoardDriver.o
+                0x00001570                rgbWrite
+ .text.initRgb  0x0000159e       0x28 ucBoardDriver.o
+                0x0000159e                initRgb
+ .text.lcdSid   0x000015c6       0x14 ucBoardDriver.o
+                0x000015c6                lcdSid
+ .text.lcdSclk  0x000015da       0x14 ucBoardDriver.o
+                0x000015da                lcdSclk
  .text.lcdLight
-                0x000015d4       0x16 ucBoardDriver.o
-                0x000015d4                lcdLight
+                0x000015ee       0x16 ucBoardDriver.o
+                0x000015ee                lcdLight
  .text.writeLcdF
-                0x000015ea      0x10e ucBoardDriver.o
-                0x000015ea                writeLcdF
+                0x00001604      0x10e ucBoardDriver.o
+                0x00001604                writeLcdF
  .text.lcdWriteText
-                0x000016f8       0x74 ucBoardDriver.o
-                0x000016f8                lcdWriteText
+                0x00001712       0x74 ucBoardDriver.o
+                0x00001712                lcdWriteText
  .text.lcdCreateCustomChar
-                0x0000176c       0x4e ucBoardDriver.o
-                0x0000176c                lcdCreateCustomChar
+                0x00001786       0x4e ucBoardDriver.o
+                0x00001786                lcdCreateCustomChar
  .text.lcdWriteZahl
-                0x000017ba      0x202 ucBoardDriver.o
-                0x000017ba                lcdWriteZahl
+                0x000017d4      0x202 ucBoardDriver.o
+                0x000017d4                lcdWriteZahl
  .text.lcdClear
-                0x000019bc       0x2e ucBoardDriver.o
-                0x000019bc                lcdClear
- .text.initLcd  0x000019ea       0x42 ucBoardDriver.o
-                0x000019ea                initLcd
+                0x000019d6       0x2e ucBoardDriver.o
+                0x000019d6                lcdClear
+ .text.initLcd  0x00001a04       0x42 ucBoardDriver.o
+                0x00001a04                initLcd
  .text.initBoard
-                0x00001a2c      0x1c8 ucBoardDriver.o
-                0x00001a2c                initBoard
+                0x00001a46      0x1c8 ucBoardDriver.o
+                0x00001a46                initBoard
  .text.matrixWriteNextLine
-                0x00001bf4      0x104 ucBoardDriver.o
-                0x00001bf4                matrixWriteNextLine
+                0x00001c0e      0x104 ucBoardDriver.o
+                0x00001c0e                matrixWriteNextLine
  .text.__vector_23
-                0x00001cf8       0x98 ucBoardDriver.o
-                0x00001cf8                __vector_23
- .text.libgcc   0x00001d90       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_tablejump2.o)
-                0x00001d90                __tablejump2__
+                0x00001d12       0x98 ucBoardDriver.o
+                0x00001d12                __vector_23
+ .text.libgcc   0x00001daa       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_tablejump2.o)
+                0x00001daa                __tablejump2__
  .text.libgcc.div
-                0x00001da0       0x1a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_udivdi3.o)
-                0x00001da0                __umoddi3
-                0x00001da4                __udivdi3
-                0x00001da6                __udivdi3_umoddi3
+                0x00001dba       0x1a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_udivdi3.o)
+                0x00001dba                __umoddi3
+                0x00001dbe                __udivdi3
+                0x00001dc0                __udivdi3_umoddi3
  .text.libgcc.div
-                0x00001dba       0xa2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_udivmod64.o)
-                0x00001dba                __udivmod64
- .text.libgcc   0x00001e5c       0x18 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_adddi3_s8.o)
-                0x00001e5c                __adddi3_s8
- .text.libgcc   0x00001e74       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_subdi3.o)
-                0x00001e74                __subdi3
- .text.libgcc   0x00001e86       0x18 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_cmpdi2_s8.o)
-                0x00001e86                __cmpdi2_s8
+                0x00001dd4       0xa2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_udivmod64.o)
+                0x00001dd4                __udivmod64
+ .text.libgcc   0x00001e76       0x18 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_adddi3_s8.o)
+                0x00001e76                __adddi3_s8
+ .text.libgcc   0x00001e8e       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_subdi3.o)
+                0x00001e8e                __subdi3
+ .text.libgcc   0x00001ea0       0x18 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_cmpdi2_s8.o)
+                0x00001ea0                __cmpdi2_s8
  .text.avr-libc
-                0x00001e9e       0x70 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(vsnprintf.o)
-                0x00001e9e                vsnprintf
+                0x00001eb8       0x70 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(vsnprintf.o)
+                0x00001eb8                vsnprintf
  .text.avr-libc
-                0x00001f0e      0x3fa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(vfprintf_std.o)
-                0x00001f0e                vfprintf
+                0x00001f28      0x3fa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(vfprintf_std.o)
+                0x00001f28                vfprintf
  .text.avr-libc
-                0x00002308       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(strnlen_P.o)
-                0x00002308                strnlen_P
+                0x00002322       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(strnlen_P.o)
+                0x00002322                strnlen_P
  .text.avr-libc
-                0x0000231e       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(strnlen.o)
-                0x0000231e                strnlen
+                0x00002338       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(strnlen.o)
+                0x00002338                strnlen
  .text.avr-libc
-                0x00002334       0x78 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(fputc.o)
-                0x00002334                fputc
+                0x0000234e       0x78 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(fputc.o)
+                0x0000234e                fputc
  .text.avr-libc
-                0x000023ac       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(ultoa_invert.o)
-                0x000023ac                __ultoa_invert
-                0x00002468                . = ALIGN (0x2)
+                0x000023c6       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(ultoa_invert.o)
+                0x000023c6                __ultoa_invert
+                0x00002482                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00002468        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
-                0x00002468                _exit
-                0x00002468                exit
+ .fini9         0x00002482        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
+                0x00002482                _exit
+                0x00002482                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -681,11 +681,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00002468        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
+ .fini0         0x00002482        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000246c                _etext = .
+                0x00002486                _etext = .
 
-.data           0x00800200      0x104 load address 0x0000246c
+.data           0x00800200      0x104 load address 0x00002486
                 0x00800200                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -725,8 +725,8 @@ END GROUP
  COMMON         0x00800312       0x70 ucBoardDriver.o
                 0x00800312                matrix
                 0x00800382                PROVIDE (__bss_end, .)
-                0x0000246c                __data_load_start = LOADADDR (.data)
-                0x00002570                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00002486                __data_load_start = LOADADDR (.data)
+                0x0000258a                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800382        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -812,11 +812,11 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x2bf6
+.debug_info     0x00000000     0x2bff
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega2560/avr6/crtatmega2560.o
- .debug_info    0x00000bbc      0x7ed main.o
- .debug_info    0x000013a9     0x184d ucBoardDriver.o
+ .debug_info    0x00000bbc      0x7f6 main.o
+ .debug_info    0x000013b2     0x184d ucBoardDriver.o
 
 .debug_abbrev   0x00000000      0xf67
  *(.debug_abbrev)
@@ -824,11 +824,11 @@ END GROUP
  .debug_abbrev  0x00000b1a       0xfa main.o
  .debug_abbrev  0x00000c14      0x353 ucBoardDriver.o
 
-.debug_line     0x00000000     0x1e11
+.debug_line     0x00000000     0x1e17
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x1fa C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega2560/avr6/crtatmega2560.o
- .debug_line    0x000001fa      0x9bd main.o
- .debug_line    0x00000bb7     0x125a ucBoardDriver.o
+ .debug_line    0x000001fa      0x9c3 main.o
+ .debug_line    0x00000bbd     0x125a ucBoardDriver.o
 
 .debug_frame    0x00000000      0x6b4
  *(.debug_frame)
